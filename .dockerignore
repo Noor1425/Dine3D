@@ -1,0 +1,12 @@
+node_modules
+.next
+.next-dev
+.next-prod
+graphify-out
+src/graphify-out
+coverage
+.env
+.env.*
+!.env.example
+npm-debug.log*
+.DS_Store

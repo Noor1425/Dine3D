@@ -1,0 +1,313 @@
+/* ══════════════════════════════════════════════════════════════════
+   THE RIDER PORTAL
+
+   A phone, outdoors, one hand, mobile data. Big targets, high contrast,
+   and the one action that matters sized so it cannot be missed — or hit
+   by accident, which is why destructive and completing actions are never
+   placed side by side.
+   ══════════════════════════════════════════════════════════════════ */
+
+.rider-root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #0f172a;
+  color: #e2e8f0;
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Notched phones: the action button must not sit under the home bar. */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+.rider-shell {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+}
+
+.rider-empty {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background: #0f172a;
+  color: #94a3b8;
+  font: 16px system-ui, sans-serif;
+}
+
+/* ── Header ──────────────────────────────────────────────────────── */
+
+.rider-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 0 16px;
+}
+
+.rider-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.rider-head h1 {
+  margin: 2px 0 0;
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #f8fafc;
+}
+
+.rider-shift {
+  flex: 0 0 auto;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.rider-shift.on { background: #064e3b; color: #6ee7b7; border-color: #065f46; }
+.rider-shift.off { background: #1e293b; color: #94a3b8; border-color: #334155; }
+.rider-shift:disabled { opacity: 0.6; }
+
+/* ── Today ───────────────────────────────────────────────────────── */
+
+.rider-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.rider-summary > div {
+  padding: 12px;
+  border-radius: 14px;
+  background: #1e293b;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.rider-summary span {
+  display: block;
+  font-size: 20px;
+  font-weight: 800;
+  color: #f8fafc;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 2px;
+}
+
+/* ── Delivery cards ──────────────────────────────────────────────── */
+
+.rider-list { display: flex; flex-direction: column; gap: 14px; }
+
+.rider-card {
+  padding: 16px;
+  border-radius: 18px;
+  background: #1e293b;
+  border: 1px solid #334155;
+}
+
+.rider-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.rider-status {
+  padding: 5px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rider-order {
+  font-size: 12px;
+  color: #64748b;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: break-word;
+}
+
+/* The address is the largest thing on the card, because it is the thing
+   the rider is actually looking for, and it opens maps. */
+.rider-address {
+  display: block;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.35;
+  color: #f8fafc;
+  text-decoration: none;
+  border-bottom: 1px dashed #475569;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+.rider-address:active { color: #93c5fd; }
+
+.rider-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 14px;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+.rider-meta a { color: #7dd3fc; font-weight: 700; text-decoration: none; }
+
+.rider-cash {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #422006;
+  color: #fde68a;
+  font-size: 15px;
+}
+.rider-cash strong { font-size: 17px; }
+
+.rider-paid {
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #052e2b;
+  color: #6ee7b7;
+  font-size: 14px;
+}
+
+/* One action, full width, tall enough to hit while holding a bag. */
+.rider-action {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  border: 0;
+  border-radius: 14px;
+  background: #f97316;
+  color: #0f172a;
+  font: inherit;
+  font-size: 17px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.rider-action:active { background: #ea580c; }
+.rider-action:disabled { opacity: 0.5; }
+
+/* ── Finished ────────────────────────────────────────────────────── */
+
+.rider-recent { margin-top: 28px; }
+.rider-recent h2 {
+  margin: 0 0 10px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+.rider-recent-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid #1e293b;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* ── States ──────────────────────────────────────────────────────── */
+
+.rider-none {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 32px 20px;
+  border-radius: 18px;
+  background: #1e293b;
+  text-align: center;
+  color: #94a3b8;
+}
+.rider-none strong { color: #f8fafc; font-size: 17px; }
+
+.rider-error {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #450a0a;
+  border: 1px solid #7f1d1d;
+  color: #fecaca;
+  font-size: 14px;
+}
+
+/* ── Confirming a delivery ───────────────────────────────────────── */
+
+.rider-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(2, 6, 23, 0.75);
+  padding: 0;
+}
+
+.rider-modal {
+  width: 100%;
+  max-width: 560px;
+  padding: 22px 18px calc(22px + env(safe-area-inset-bottom));
+  border-radius: 22px 22px 0 0;
+  background: #1e293b;
+  border-top: 1px solid #334155;
+}
+
+.rider-modal h2 { margin: 0 0 4px; font-size: 20px; font-weight: 800; color: #f8fafc; }
+.rider-modal > p { margin: 0 0 18px; font-size: 14px; color: #94a3b8; }
+
+.rider-modal label {
+  display: block;
+  margin-bottom: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #94a3b8;
+}
+
+.rider-modal input {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #475569;
+  background: #0f172a;
+  color: #f8fafc;
+  font: inherit;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+.rider-modal input:focus { outline: 2px solid #f97316; outline-offset: 1px; }
+
+.rider-modal-actions { display: flex; gap: 10px; }
+.rider-modal-actions .ghost {
+  flex: 0 0 35%;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #cbd5e1;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.rider-modal-actions .rider-action { flex: 1; }
+
+@media (min-width: 480px) {
+  .rider-summary { grid-template-columns: repeat(4, 1fr); }
+  .rider-modal-backdrop { align-items: center; padding: 16px; }
+  .rider-modal { border-radius: 22px; border: 1px solid #334155; }
+}

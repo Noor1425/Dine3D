@@ -1,0 +1,45 @@
+{
+  "name": "dine3d-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "test": "jest --runInBand",
+    "test:offline-browser": "node tests/browser/offline-production-acceptance.js",
+    "start": "node scripts/serve-standalone.js",
+    "lint": "next lint",
+    "clean": "rm -rf .next-dev",
+    "clean:all-builds": "rm -rf .next .next-dev .next-prod",
+    "rebuild": "npm run clean && npm run dev"
+  },
+  "dependencies": {
+    "dexie": "^4.4.4",
+    "framer-motion": "^12.38.0",
+    "lucide-react": "^1.39.0",
+    "next": "^15.5.22",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "recharts": "^3.8.1",
+    "socket.io-client": "^4.8.3",
+    "sonner": "^2.0.7"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.28.4",
+    "autoprefixer": "^10.4.27",
+    "babel-jest": "^30.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^15.5.22",
+    "fake-indexeddb": "^6.2.4",
+    "jest": "^30.3.0",
+    "playwright-core": "^1.55.1",
+    "postcss": "8.5.27",
+    "tailwindcss": "^3.4.19"
+  },
+  "overrides": {
+    "nanoid": "3.3.18",
+    "postcss": "$postcss",
+    "sharp": "0.35.4",
+    "socket.io-parser": "4.2.7"
+  }
+}

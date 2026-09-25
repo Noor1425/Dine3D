@@ -1,0 +1,260 @@
+/* ══════════════════════════════════════════════════════════════════
+   RECEIPT PRINTING
+   ══════════════════════════════════════════════════════════════════
+
+   Makes window.print() produce a receipt on ANY printer the computer
+   already has — a USB thermal printer, an office laser, or a PDF —
+   rather than a screenshot of the point-of-sale screen.
+
+   Two things are happening here:
+
+   1. On screen the receipt element is kept out of the way entirely.
+   2. When printing, the application is hidden and only the receipt is
+      revealed, laid out on a fixed character grid in a monospace face
+      so the columns land exactly where the thermal version puts them.
+
+   The page box is set to the paper roll width with no margins, which
+   is what stops a thermal driver from scaling the receipt down to fit
+   an imaginary A4 sheet.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Hidden on screen: the receipt is a print artefact, not a UI element. */
+#receipt-print-root {
+  position: absolute;
+  left: -10000px;
+  top: 0;
+  width: 80mm;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media print {
+  /* The browser's own header and footer would waste a third of a
+     thermal roll and print the page URL on a customer's receipt. */
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+
+  html,
+  body {
+    width: 80mm;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+  }
+
+  /* Hide the application, then reveal only the receipt. Hiding by
+     visibility rather than display keeps the receipt's own ancestors
+     laid out, so it is not dragged off the page. */
+  body * {
+    visibility: hidden !important;
+  }
+
+  #receipt-print-root,
+  #receipt-print-root * {
+    visibility: visible !important;
+  }
+
+  #receipt-print-root {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 80mm !important;
+    padding: 3mm 3mm 8mm !important;
+    pointer-events: auto;
+  }
+
+  #receipt-print-root.receipt-paper-58 {
+    width: 58mm !important;
+  }
+
+  /* Nothing should break across a page — a receipt is one continuous
+     roll, and a page break mid-total is a dispute waiting to happen. */
+  #receipt-print-root .receipt-item,
+  #receipt-print-root .receipt-total,
+  #receipt-print-root .receipt-footer {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+/* ── The receipt itself ────────────────────────────────────────── */
+
+.receipt-paper {
+  /* A monospace face is what makes the columns line up the same way
+     they do on a thermal printer's fixed character grid. */
+  font-family: "Menlo", "Consolas", "DejaVu Sans Mono", "Courier New", monospace;
+  font-size: 11px;
+  line-height: 1.35;
+  color: #000;
+  background: #fff;
+  /* Thermal paper is low contrast; anti-aliasing washes small type out. */
+  -webkit-font-smoothing: none;
+}
+
+.receipt-paper-58 {
+  font-size: 10px;
+}
+
+.receipt-header {
+  text-align: center;
+}
+
+.receipt-title-xl {
+  font-size: 1.7em;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  margin-bottom: 2px;
+}
+
+.receipt-title {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.receipt-left {
+  text-align: left;
+}
+
+.receipt-rule {
+  border-top: 1px dashed #000;
+  margin: 4px 0;
+}
+
+.receipt-rule-double {
+  border-top: 2px solid #000;
+}
+
+/* A two-column row: label left, value hard against the right edge.
+   Flex does here what padEnd() does on the thermal printer. */
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.receipt-row-label {
+  flex: 1 1 auto;
+  min-width: 0;
+  /* Long item names wrap under themselves instead of pushing the
+     price off the paper. */
+  overflow-wrap: anywhere;
+}
+
+.receipt-row-value {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.receipt-row-strong {
+  font-weight: 700;
+}
+
+.receipt-qty {
+  font-weight: 700;
+}
+
+.receipt-item {
+  margin-bottom: 2px;
+}
+
+/* Kitchen tickets are read at arm's length across a hot pass. */
+.receipt-row-large {
+  font-size: 1.35em;
+  font-weight: 700;
+  line-height: 1.25;
+  margin-top: 4px;
+}
+
+.receipt-modifier {
+  padding-left: 12px;
+}
+
+.receipt-note {
+  padding-left: 12px;
+  overflow-wrap: anywhere;
+}
+
+.receipt-note-loud {
+  font-weight: 700;
+  font-size: 1.1em;
+}
+
+.receipt-wrap {
+  overflow-wrap: anywhere;
+}
+
+.receipt-total {
+  font-size: 1.45em;
+  font-weight: 700;
+  padding: 2px 0;
+}
+
+.receipt-stamp {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin-top: 6px;
+}
+
+.receipt-footer {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.receipt-reference {
+  margin-top: 6px;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+/* ── FBR digital invoice ──────────────────────────────────────────────────
+   The block that makes a receipt a valid tax invoice. FBR requires the QR to
+   be at least 2cm square so a customer can scan it with the Tax Asaan app —
+   a code too small to read fails the requirement as surely as no code at all.
+   Sized in millimetres because this is printed, not viewed. */
+.receipt-fbr {
+  margin-top: 4mm;
+  padding-top: 3mm;
+  border-top: 1px dashed currentColor;
+  text-align: center;
+}
+
+.receipt-fbr-label {
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  opacity: 0.75;
+}
+
+.receipt-fbr-number {
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  margin-top: 1mm;
+  /* An invoice number that wraps mid-digit is unreadable to a person typing it
+     into a verification form. */
+  word-break: break-all;
+}
+
+.receipt-fbr-qr {
+  display: block;
+  width: 24mm;
+  height: 24mm;
+  margin: 2mm auto 1mm;
+  image-rendering: pixelated;
+}
+
+.receipt-fbr-verify {
+  font-size: 9px;
+  opacity: 0.75;
+}
+
+@media print {
+  .receipt-fbr { break-inside: avoid; }
+  /* Never let a printer's colour management wash out the code. */
+  .receipt-fbr-qr { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}

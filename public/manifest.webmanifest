@@ -1,0 +1,13 @@
+{
+  "name": "Dine3D Restaurant Operations",
+  "short_name": "Dine3D POS",
+  "description": "Restaurant POS, kitchen, inventory, and QR ordering",
+  "start_url": "/admin/pos",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#f97316",
+  "icons": [
+    { "src": "/default-logo.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
+
