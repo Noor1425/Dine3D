@@ -147,6 +147,8 @@ function buildTables() {
     qrToken: uid('qr'),
     qrCodeUrl: null,
     isActive: true,
+    isQrActive: true,
+    qrRevokedAt: null,
     createdAt: iso(daysAgo(80)),
   }));
 }

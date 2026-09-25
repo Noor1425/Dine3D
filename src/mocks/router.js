@@ -24,7 +24,11 @@ function on(method, pattern, handler) {
  * ------------------------------------------------------------------ */
 
 function getSession(db, cookies) {
-  const sid = cookies.dine3d_session;
+  // middleware.js gates every /admin/* page on the presence of
+  // dine3d_identity or dine3d_refresh — not our own session id cookie name.
+  // Using the same names here means a client-side navigation to a protected
+  // page never gets bounced back to /admin/login?reason=session_expired.
+  const sid = cookies.dine3d_identity || cookies.dine3d_refresh;
   if (!sid) return null;
   return db.sessions.get(sid) || null;
 }
@@ -284,7 +288,10 @@ on('POST', '/auth/login', (ctx) => {
       membership: { id: uid('member'), role: 'owner', accessLevel: 'corporate', accessibleBranchIds: [] },
       session: { expiresAt: iso(new Date(Date.now() + 30 * 24 * 3600 * 1000)), accessExpiresIn: 900 },
     },
-    cookies: [{ name: 'dine3d_session', value: sid, options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 3600 } }],
+    cookies: [
+      { name: 'dine3d_identity', value: sid, options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 3600 } },
+      { name: 'dine3d_refresh', value: sid, options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 30 * 24 * 3600 } },
+    ],
   };
 });
 
@@ -300,9 +307,16 @@ on('POST', '/auth/refresh', (ctx) => {
 });
 
 on('POST', '/auth/logout', (ctx) => {
-  const sid = ctx.cookies.dine3d_session;
+  const sid = ctx.cookies.dine3d_identity || ctx.cookies.dine3d_refresh;
   if (sid) ctx.db.sessions.delete(sid);
-  return { status: 200, body: { success: true }, cookies: [{ name: 'dine3d_session', value: '', options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 } }] };
+  return {
+    status: 200,
+    body: { success: true },
+    cookies: [
+      { name: 'dine3d_identity', value: '', options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 } },
+      { name: 'dine3d_refresh', value: '', options: { httpOnly: true, sameSite: 'lax', path: '/', maxAge: 0 } },
+    ],
+  };
 });
 on('POST', '/auth/logout-all', (ctx) => routes.find((r) => r.method === 'POST' && r.regex.test('/auth/logout')).handler(ctx));
 on('GET', '/auth/sessions', (ctx) => {
@@ -523,7 +537,7 @@ on('GET', '/tables', (ctx) => {
 on('POST', '/tables', (ctx) => {
   requireAuth(ctx.db, ctx.cookies);
   const label = ctx.body.label || ctx.body.tableNumber || `T${ctx.db.tables.length + 1}`;
-  const table = { id: uid('table'), restaurantId: ctx.db.restaurant.id, branchId: ctx.db.ids.MAIN_BRANCH_ID, tableNumber: label, label, capacity: ctx.body.capacity || 4, qrToken: uid('qr'), qrCodeUrl: null, isActive: true, createdAt: iso(new Date()) };
+  const table = { id: uid('table'), restaurantId: ctx.db.restaurant.id, branchId: ctx.db.ids.MAIN_BRANCH_ID, tableNumber: label, label, capacity: ctx.body.capacity || 4, qrToken: uid('qr'), qrCodeUrl: null, isActive: true, isQrActive: true, qrRevokedAt: null, createdAt: iso(new Date()) };
   ctx.db.tables.push(table);
   return { status: 201, body: { table } };
 });

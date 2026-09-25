@@ -619,14 +619,18 @@ class ApiClient {
     const host = typeof window !== 'undefined' ? window.location.hostname.toLowerCase() : '';
     const isLocalHost = host === 'localhost' || host === '127.0.0.1' || host.endsWith('.localhost');
     const isPublicHost = host.endsWith('.dine3d.ai') || host === 'dine3d.ai' || host === 'www.dine3d.ai';
+    // This standalone demo copy can run on any port (whatever wasn't already
+    // taken locally), not necessarily 3000 — so this reads it from the
+    // current page instead of assuming it.
+    const localPort = typeof window !== 'undefined' && window.location.port ? `:${window.location.port}` : '';
 
     const baseUrl = isPublicHost
       ? `https://${restaurant.slug}.dine3d.ai`
       : isLocalHost
-        ? `http://${restaurant.slug}.localhost:3000`
+        ? `http://${restaurant.slug}.localhost${localPort}`
         : (process.env.NODE_ENV === 'production'
           ? `https://${restaurant.slug}.dine3d.ai`
-          : `http://${restaurant.slug}.localhost:3000`);
+          : `http://${restaurant.slug}.localhost${localPort}`);
 
     const normalizedPath = String(path || '').trim().replace(/^\/+/, '');
     return normalizedPath ? `${baseUrl}/${normalizedPath}` : baseUrl;
