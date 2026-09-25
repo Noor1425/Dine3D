@@ -72,7 +72,7 @@ function buildStaff() {
       id: OWNER_ID,
       restaurantId: RESTAURANT_ID,
       name: 'Asjad Yousaf',
-      email: 'asjad@gmail.com',
+      email: 'nooe@gmail.com',
       role: 'owner',
       isActive: true,
       phone: '+92 300 1234567',
@@ -418,8 +418,8 @@ export function createInitialDb() {
 
 export const DEMO_LOGIN = {
   restaurantCode: 'DINE-1000',
-  email: 'asjad@gmail.com',
-  password: 'Velvet-Lantern-Sky-731!',
+  email: 'nooe@gmail.com',
+  password: 'Demo@1234',
 };
 
 export { uid, iso, daysAgo, now };

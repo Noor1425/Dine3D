@@ -30,8 +30,8 @@ function destinationFor(response) {
  */
 const DEMO_CREDENTIALS = {
   restaurantCode: 'DINE-1000',
-  email: 'asjad@gmail.com',
-  password: 'Velvet-Lantern-Sky-731!',
+  email: 'nooe@gmail.com',
+  password: 'Demo@1234',
   rememberMe: true
 };
 
